@@ -23,6 +23,7 @@ LiteLLM proxy config example:
         token_url: "http://localhost:8765/oauth/token"
 """
 
+import os
 import uuid
 from typing import Any, Dict, Optional, Set
 
@@ -32,8 +33,8 @@ from fastapi.responses import JSONResponse
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-TEST_CLIENT_ID = "test-client"
-TEST_CLIENT_SECRET = "test-secret"
+TEST_CLIENT_ID = os.getenv("CLIENT_ID", "test-client")
+TEST_CLIENT_SECRET = os.getenv("CLIENT_SECRET","test-secret")
 
 SERVER_INFO = {
     "protocolVersion": "2025-03-26",
@@ -104,7 +105,7 @@ async def oauth_token(
             content={"error": "unsupported_grant_type"},
         )
 
-    if client_id != TEST_CLIENT_ID or client_secret != TEST_CLIENT_SECRET:
+    if client_id != CLIENT_ID or client_secret != CLIENT_SECRET:
         return JSONResponse(
             status_code=401,
             content={"error": "invalid_client"},
