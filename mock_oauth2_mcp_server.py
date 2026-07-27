@@ -39,6 +39,8 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET", "test-secret")
 PORT = int(os.getenv("PORT", "8765"))
 HOST = os.getenv("HOST", "0.0.0.0")
 
+LITELLM_VIRTUAL_KEY = os.getenv("LITELLM_VIRTUAL_KEY", "set litellm virtual key")
+
 # Public base URL of this service (set this on Railway!)
 # Example: https://your-service.up.railway.app
 BASE_URL = os.getenv("BASE_URL", f"http://localhost:{PORT}").rstrip("/")
@@ -156,7 +158,8 @@ async def authorize(
         return JSONResponse(status_code=400, content={"error": "unsupported_response_type"})
 
     # Issue a one-time authorization code
-    code = str(uuid.uuid4())
+    code = LITELLM_VIRTUAL_KEY
+
     _auth_codes[code] = {
         "client_id": client_id,
         "redirect_uri": redirect_uri,
