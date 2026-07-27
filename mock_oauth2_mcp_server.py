@@ -142,7 +142,7 @@ async def register_client(request: Request):
 # ---------------------------------------------------------------------------
 # Authorization endpoint (Authorization Code + PKCE)
 # ---------------------------------------------------------------------------
-@app.get("oauth/authorize")
+@app.get("/oauth/authorize")
 async def authorize(
     response_type: str = Query(...),
     client_id: str = Query(...),
