@@ -158,7 +158,7 @@ async def authorize(
         return JSONResponse(status_code=400, content={"error": "unsupported_response_type"})
 
     # Issue a one-time authorization code
-    code = LITELLM_VIRTUAL_KEY
+    code = str(uuid.uuid4())
 
     _auth_codes[code] = {
         "client_id": client_id,
@@ -192,7 +192,7 @@ async def oauth_token(
     if grant_type == "client_credentials":
         if client_id != CLIENT_ID or client_secret != CLIENT_SECRET:
             return JSONResponse(status_code=401, content={"error": "invalid_client"})
-        token = str(uuid.uuid4())
+        token = "Bearer " + LITELLM_VIRTUAL_KEY
         _valid_tokens.add(token)
         return {
             "access_token": token,
@@ -212,7 +212,7 @@ async def oauth_token(
         if redirect_uri and stored["redirect_uri"] != redirect_uri:
             return JSONResponse(status_code=400, content={"error": "invalid_grant"})
 
-        token = str(uuid.uuid4())
+        token = "Bearer " + LITELLM_VIRTUAL_KEY
         _valid_tokens.add(token)
 
         return {
@@ -220,7 +220,6 @@ async def oauth_token(
             "token_type": "bearer",
             "expires_in": 3600,
             "scope": stored.get("scope") or "openid offline_access account",
-            "refresh_token": str(uuid.uuid4()),   # optional but nice
         }
 
     return JSONResponse(status_code=400, content={"error": "unsupported_grant_type"})
